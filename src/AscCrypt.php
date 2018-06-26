@@ -45,22 +45,22 @@ class AesCrypt
   public function encrypt($data)
   {
     // 打开加密算法与模式
-    $td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
+    $td = @mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
     // 获取初始化向量长度
-    $ks = mcrypt_enc_get_iv_size($td);
+    $ks = @mcrypt_enc_get_iv_size($td);
     // 获取密钥并验证
     $encode_key = base64_decode($this->getCommonKey());
     if (strlen($encode_key) !== self::KEY_LENGTH) throw new \Exception('The key length is wrong');
     // 初始化加密
-    mcrypt_generic_init($td, $encode_key, self::KEY_IV);
+    @mcrypt_generic_init($td, $encode_key, self::KEY_IV);
     // 填充
     $pad = $ks - (strlen($data) % $ks);
     $data .= str_repeat(chr($pad), $pad);
     // 加密
-    $crypt_text = mcrypt_generic($td, $data);
+    $crypt_text = @mcrypt_generic($td, $data);
     // 清理缓冲区并且关闭加密模块
-    mcrypt_generic_deinit($td);
-    mcrypt_module_close($td);
+    @mcrypt_generic_deinit($td);
+    @mcrypt_module_close($td);
     // 处理加密数据
     $enc_data = str_replace("=","*",base64_encode($crypt_text));
     return $enc_data;
@@ -78,20 +78,20 @@ class AesCrypt
     // 加密数据格式化
     $enc_data = base64_decode(str_replace("*", "=", $enc_data));
     // 打开加密算法与模式
-    $td = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
+    $td = @mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
     // 获取密钥并验证
     $encode_key = base64_decode($this->getCommonKey());
     if (strlen($encode_key) !== self::KEY_LENGTH) throw new \Exception('The key length is wrong');
     // 初始化加密
-    mcrypt_generic_init($td, $encode_key, self::KEY_IV);
+    @mcrypt_generic_init($td, $encode_key, self::KEY_IV);
     // 解密
-    $dec_data = mdecrypt_generic($td, $enc_data);
+    $dec_data = @mdecrypt_generic($td, $enc_data);
     // 去除填充
     $pad_count = ord(substr($dec_data, -1));
     $data = substr($dec_data, 0, strlen($dec_data) - $pad_count);
     // 清理缓冲区并且关闭加密模块
-    mcrypt_generic_deinit($td);
-    mcrypt_module_close($td);
+    @mcrypt_generic_deinit($td);
+    @mcrypt_module_close($td);
     // 返回解密数据
     return $data;
   }

@@ -4,7 +4,8 @@ use Crypt\Crypt;
 $data = [
     'sss' => 1111,
 ];
-$crypt = new Crypt();
+$key = 'YmEwYTZkZGQNCmQ1NTY2OTgyDQphMTgxYTYwMw0K';
+$crypt = new Crypt($key);
 $error = $crypt->encrypt(json_encode($data));
 var_dump($error);
 

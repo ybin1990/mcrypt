@@ -5,9 +5,12 @@ namespace Crypt;
 class Crypt
 {
   public $handle = '';
-  private $DESC_KEY = '';// 密钥
-  private $ASC_KEY = '';// 密钥
+  public $key = '';// 密钥
 
+
+  public function __construct($key) {
+    $this->key = $key;
+  }
     /**
    * 实例化方法
    * @param  string $type 加密类型
@@ -17,14 +20,11 @@ class Crypt
   {
     // 获取加密类型与密钥
     $type = $type ?: 'desc';
-    $typeKey = strtoupper($type)."_KEY";
-    $key = $key ?: $this->$typeKey;
     // 获取加密对象
-    $class = ucfirst($type) . 'Crypt';
     if ($type == 'desc') {
-      $this->handle = new DescCrypt($key);
+      $this->handle = new DescCrypt($this->key);
     } else {
-      $this->handle = new AscCrypt($key);
+      $this->handle = new AscCrypt($this->key);
     }
     // $this->handle = new $class($key);
   }

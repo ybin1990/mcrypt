@@ -41,9 +41,9 @@ class DescCrypt
   public function encrypt($data)
   {
     // 打开加密算法与模式
-    $td = mcrypt_module_open(MCRYPT_3DES, '', MCRYPT_MODE_CBC, '');
+    $td = @mcrypt_module_open(MCRYPT_3DES, '', MCRYPT_MODE_CBC, '');
     // 获取初始化向量长度
-    $ks = mcrypt_enc_get_iv_size($td);
+    $ks = @mcrypt_enc_get_iv_size($td);
     // 验证向量长度
     if (strlen(self::KEY_IV) !== $ks) throw new \Exception('The iv length is wrong');
     // 解析密钥
@@ -63,12 +63,12 @@ class DescCrypt
     // 合成密钥
     $encode_key = $decode_array[0] . $decode_array[1]. $decode_array[2];
     // 初始化加密
-    mcrypt_generic_init($td, $encode_key, self::KEY_IV);
+    @mcrypt_generic_init($td, $encode_key, self::KEY_IV);
     // 加密
-    $crypt_text = mcrypt_generic($td, $data);
+    $crypt_text = @mcrypt_generic($td, $data);
     // 清理缓冲区并且关闭加密模块
-    mcrypt_generic_deinit($td);
-    mcrypt_module_close($td);
+    @mcrypt_generic_deinit($td);
+    @mcrypt_module_close($td);
     // 处理加密数据
     $enc_data = str_replace("=","*",base64_encode($crypt_text));
     return $enc_data;
@@ -87,9 +87,9 @@ class DescCrypt
     // 加密数据格式化
     $data = base64_decode(str_replace("*","=",$enc_data));
     // 打开加密算法与模式
-    $td = mcrypt_module_open(MCRYPT_3DES, '', MCRYPT_MODE_CBC, '');
+    $td = @mcrypt_module_open(MCRYPT_3DES, '', MCRYPT_MODE_CBC, '');
     // 获取初始化向量长度
-    $ks = mcrypt_enc_get_iv_size($td);
+    $ks = @mcrypt_enc_get_iv_size($td);
     // 解析密钥
     $decode_array = explode("\r\n", base64_decode(self::getCommonKey()));
     array_pop($decode_array);
@@ -107,12 +107,12 @@ class DescCrypt
     // 合成密钥
     $encode_key = $decode_array[0] . $decode_array[1]. $decode_array[2];
     // 初始化加密
-    mcrypt_generic_init($td, $encode_key, self::KEY_IV);
+    @mcrypt_generic_init($td, $encode_key, self::KEY_IV);
     // 解密
-    $dec_data = mdecrypt_generic($td, $data);
+    $dec_data = @mdecrypt_generic($td, $data);
     // 清理缓冲区并且关闭加密模块
-    mcrypt_generic_deinit($td);
-    mcrypt_module_close($td);
+    @mcrypt_generic_deinit($td);
+    @mcrypt_module_close($td);
     // 返回解密数据
     return rtrim($dec_data, "\0");
   }
