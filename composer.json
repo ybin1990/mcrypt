@@ -1,0 +1,26 @@
+{
+    "name": "crypt/muyi",
+    "description": "crypt encode decode",
+    "type": "library",
+     "authors": [
+        {
+            "name": "杨兵",
+            "email": "406742582@qq.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+	    "php": ">= 5.4.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Crypt\\": "src/"
+        }
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://packagist.phpcomposer.com"
+        }
+    }
+}
